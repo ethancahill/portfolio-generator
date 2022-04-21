@@ -1,6 +1,6 @@
 const inquirer = require('inquirer');
 const Choice = require('inquirer/lib/objects/choice');
-const fs = require('fs')
+const { writeFile, copyFile } = require('.utils/generate-site.js')
 const generatePage = require('./src/page-template.js');
 
 
@@ -13,10 +13,10 @@ const promptUser = () => {
             message: 'What is your name?',
             validate: nameInput => {
                 if (nameInput) {
-                  return true;
+                    return true;
                 } else {
-                  console.log('Please enter your name!');
-                  return false;
+                    console.log('Please enter your name!');
+                    return false;
                 }
             }
         },
@@ -26,10 +26,10 @@ const promptUser = () => {
             message: 'Enter your GitHub Username',
             validate: nameInput => {
                 if (nameInput) {
-                  return true;
+                    return true;
                 } else {
-                  console.log('Please enter your name!');
-                  return false;
+                    console.log('Please enter your name!');
+                    return false;
                 }
             }
         },
@@ -43,7 +43,7 @@ const promptUser = () => {
             type: 'input',
             name: 'about',
             message: 'Provide some information about yourself:',
-            when: ({ confirmAbout }) =>{
+            when: ({ confirmAbout }) => {
                 if (confirmAbout) {
                     return true;
                 } else {
@@ -70,10 +70,10 @@ Add a New Project
             message: 'What is the name of your project?',
             validate: nameInput => {
                 if (nameInput) {
-                  return true;
+                    return true;
                 } else {
-                  console.log('Please enter your name!');
-                  return false;
+                    console.log('Please enter your name!');
+                    return false;
                 }
             }
         },
@@ -83,10 +83,10 @@ Add a New Project
             message: 'Provide a description of the project (Required)',
             validate: nameInput => {
                 if (nameInput) {
-                  return true;
+                    return true;
                 } else {
-                  console.log('Please enter your name!');
-                  return false;
+                    console.log('Please enter your name!');
+                    return false;
                 }
             }
         },
@@ -102,10 +102,10 @@ Add a New Project
             message: 'Enter the GitHub link to your project. (Required)',
             validate: nameInput => {
                 if (nameInput) {
-                  return true;
+                    return true;
                 } else {
-                  console.log('Please enter your name!');
-                  return false;
+                    console.log('Please enter your name!');
+                    return false;
                 }
             }
         },
@@ -137,11 +137,18 @@ Add a New Project
 promptUser()
     .then(promptProject)
     .then(portfolioData => {
-        const pageHTML = generatePage(portfolioData);
-
-        fs.writeFile('./index.html', pageHTML, err => {
-            if (err) throw new Error(err);
-        
-            console.log('Portfolio complete! Check out index.html to see the output!');
-        });
+    return generatePage(portfolioData);
+    })
+    .then(pageHTML => {
+        return writeFile(pageHTML)
+    })
+    .then(writeFileResponse => {
+        console.log(writeFileResponse);
+        return copyFile()
+    })
+    .then(copyFileResponse => {
+        console.log(copyFileResponse);
+    })
+    .catch(err => {
+        console.log(err)
     });
